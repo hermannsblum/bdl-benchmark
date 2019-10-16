@@ -44,6 +44,13 @@ class DataSplits(
 class Benchmark(object):
   """Abstract class for benchmark objects, specifying the core API."""
 
+  def __init__(self,
+               level=None,
+               data_dir=None,
+               download_and_prepare=False,
+               **dtask_kwargs):
+    raise NotImplementedError()
+
   def download_and_prepare(self):
     """Downloads and prepares necessary datasets for benchmark."""
     raise NotImplementedError()
