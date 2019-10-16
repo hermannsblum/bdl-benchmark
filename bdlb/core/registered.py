@@ -15,10 +15,12 @@
 """Benchmarks registry handlers and definitions."""
 
 from ..diabetic_retinopathy_diagnosis.benchmark import DiabeticRetinopathyDiagnosisBecnhmark
+from ..fishyscapes.benchmark import FishyscapesValidation
 
 # Internal registry containing <str registered_name, Benchmark subclass>
 _BENCHMARK_REGISTRY = {
-    "diabetic_retinopathy_diagnosis": DiabeticRetinopathyDiagnosisBecnhmark
+    "diabetic_retinopathy_diagnosis": DiabeticRetinopathyDiagnosisBecnhmark,
+    "fishyscapes": FishyscapesValidation,
 }
 
 
@@ -28,7 +30,7 @@ def load(benchmark,
          download_and_prepare=True,
          **dtask_kwargs):
   """Loads the named benchmark into a `bdlb.Benchmark`.
-  
+
   Args:
     benchmark: `str`, the registerd name of `bdlb.Benchmark`.
     level: `bdlb.Level` or `str` (optional), which level of the
@@ -38,10 +40,10 @@ def load(benchmark,
     download_and_prepare: (optional) `bool`, if the data is not available
         it downloads and preprocesses it.
     dtask_kwargs: key arguments for the benchmark contructor.
-  
+
   Returns:
     A registered `bdlb.Benchmark` with `level` at `data_dir`.
-  
+
   Raises:
     BenchmarkNotFoundError: if `name` is unrecognised.
   """
