@@ -1,8 +1,11 @@
+# New: Fishyscapes added to BDLB!
+
+
 # Bayesian Deep Learning Benchmarks
 
 In order to make real-world difference with **Bayesian Deep Learning** (BDL) tools, the tools must scale to real-world settings. And for that we, the research community, must be able to evaluate our inference tools (and iterate quickly) with real-world benchmark tasks. We should be able to do this without necessarily worrying about application-specific domain knowledge, like the expertise often required in medical applications for example. We require benchmarks to test for inference robustness, performance, and accuracy, in addition to cost and effort of development. These benchmarks should be at a variety of scales, ranging from toy `MNIST`-scale benchmarks for fast development cycles, to large data benchmarks which are truthful to real-world applications, capturing their constraints.
 
-Our BDL benchmarks should 
+Our BDL benchmarks should
 * provide a transparent, modular and consistent interface for the evaluation of deep probabilistic models on a variety of _downstream tasks_;
 * rely on expert-driven metrics of uncertainty quality (actual applications making use of BDL uncertainty in the real-world), but abstract away the expert-knowledge and eliminate the boilerplate steps necessary for running experiments on real-world datasets;
 * make it easy to compare the performance of new models against _well tuned baselines_, models that have been well-adopted by the machine learning community, under a fair and realistic setting (e.g., computational resources, model sizes, datasets);
@@ -23,10 +26,11 @@ In this repo we strive to provide such well-needed benchmarks for the BDL commun
   - [x] [Mean-Field Variational Inference](baselines/diabetic_retinopathy_diagnosis/mfvi) (following [Peterson and Anderson, 1987](https://pdfs.semanticscholar.org/37fa/18c66b8130b9f9748d9c94472c5671fb5622.pdf), [Wen et al., 2018](https://arxiv.org/abs/1803.04386))
   - [x] [Deep Ensembles](baselines/diabetic_retinopathy_diagnosis/deep_ensembles) (following [Lakshminarayanan et al., 2016](https://arxiv.org/abs/1612.01474))
   - [x] [Ensemble MC Dropout](baselines/diabetic_retinopathy_diagnosis/deep_ensembles) (following [Smith and Gal, 2018](https://arxiv.org/abs/1803.08533))
+- [x] Fishyscapes (in `alpha`, following [Blum et al.](https://arxiv.org/abs/1904.03215))
 
 - [ ] Autonomous Vehicle's Scene Segmentation (in `pre-alpha`, following [Mukhoti et al.](https://arxiv.org/abs/1811.12709))
 - [ ] Galaxy Zoo (in `pre-alpha`, following [Walmsley et al.](https://arxiv.org/abs/1905.07424))
-- [ ] Fishyscapes (in `pre-alpha`, following [Blum et al.](https://arxiv.org/abs/1904.03215))
+
 
 
 ## Installation
@@ -34,10 +38,11 @@ In this repo we strive to provide such well-needed benchmarks for the BDL commun
 *BDL Benchmarks* is shipped as a PyPI package (Python3 compatible) installable as:
 
 ```
-pip3 install git+https://github.com/OATML/bdl-benchmarks.git
+pip3 install git+https://github.com/hermannsblum/bdl-benchmarks.git
 ```
 
-The data downloading and preparation is benchmark-specific, and you can follow the relevant guides at `baselines/<benchmark>/README.md` (e.g. [`baselines/diabetic_retinopathy_diagnosis/README.md`](baselines/diabetic_retinopathy_diagnosis/README.md)).
+The data downloading and preparation is done automatically for most of the benchmarks.
+Specific benchmarks (Diabetic Retinopathy Diagnosis) require manual action, and you can follow the relevant guides at `baselines/<benchmark>/README.md` (e.g. [`baselines/diabetic_retinopathy_diagnosis/README.md`](baselines/diabetic_retinopathy_diagnosis/README.md)).
 
 
 ## Examples
@@ -56,7 +61,7 @@ The models try to predict diabetic retinopathy, and use their uncertainty for *p
 <img src="http://www.cs.ox.ac.uk/people/angelos.filos/assets/bdl-benchmarks/metrics/legend.png" style="float: left; width: 100%; margin-bottom: 0.5em; margin-top: 0.0em" >
 </p>
 
-**You can even play with a [colab notebook](notebooks/diabetic_retinopathy_diagnosis.ipynb) to see the workflow of the benchmark**, and contribute your model for others to benchmark against. 
+**You can even play with a [colab notebook](notebooks/diabetic_retinopathy_diagnosis.ipynb) to see the workflow of the benchmark**, and contribute your model for others to benchmark against.
 
 
 ## Cite as
