@@ -15,5 +15,4 @@
 
 from tensorflow_datasets.core.download.checksums import add_checksums_dir
 from os import path
-print(path.join(path.dirname(__file__), 'url_checksums'))
 add_checksums_dir(path.normpath(path.join(path.dirname(__file__), 'url_checksums')))

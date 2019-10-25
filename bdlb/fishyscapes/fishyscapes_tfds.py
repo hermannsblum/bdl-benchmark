@@ -1,4 +1,4 @@
-"""TODO(fishyscapes): Add a description here."""
+"""Fishyscapes Lost & Found Validation Dataset."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -22,7 +22,6 @@ _CITATION = """
 }
 """
 
-# TODO(fishyscapes):
 _DESCRIPTION = """
 Benchmark of anomaly detection for semantic segmentation in urban driving images.
 """
@@ -41,10 +40,9 @@ class FishyscapesConfig(tfds.core.BuilderConfig):
 
 
 class Fishyscapes(tfds.core.GeneratorBasedBuilder):
-  """TODO(fishyscapes): Short description of my dataset."""
+  """Fishyscapes Lost & Found Validation Dataset"""
 
-  # TODO(fishyscapes): Set up version.
-  VERSION = tfds.core.Version('0.1.0')
+  VERSION = tfds.core.Version('1.0.0')
 
   BUILDER_CONFIGS = [
       FishyscapesConfig(
@@ -77,9 +75,7 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
 
   def _split_generators(self, dl_manager):
     """Returns SplitGenerators."""
-    # TODO(fishyscapes): Downloads the data and defines the splits
-    # dl_manager is a tfds.download.DownloadManager that can be used to
-    # download and extract URLs
+    # download the data
     dl_paths = dl_manager.download({
         'mask': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fishyscapes_lostandfound.zip',
     })
