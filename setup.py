@@ -20,7 +20,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the README file
 with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
-  long_description = f.read()
+    long_description = f.read()
 
 setup(
     name="bdlb",
@@ -44,6 +44,7 @@ setup(
         "tfp-nightly",
         "tensorflow-datasets",
     ],
+    package_data={'bdlb': ['core/url_checksums/*']},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Researchers",
