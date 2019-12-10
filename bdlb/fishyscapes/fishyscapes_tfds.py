@@ -43,19 +43,20 @@ class FishyscapesConfig(tfds.core.BuilderConfig):
 class Fishyscapes(tfds.core.GeneratorBasedBuilder):
   """Fishyscapes Lost & Found Validation Dataset"""
 
-  VERSION = tfds.core.Version('1.0.0')
-
   BUILDER_CONFIGS = [
       FishyscapesConfig(
         name='Lost and Found',
         description='Validation set based on LostAndFound images.',
-        version=VERSION,
+        version=tfds.core.Version('1.0.0'),
         base_data='lost_and_found',
       ),
       FishyscapesConfig(
         name='Static',
         description='Validation set based on Cityscapes and Pascal VOC images.',
-        version=VERSION,
+        version=tfds.core.Version('2.0.0', 'improved blending since june 2019'),
+        supported_versions=[
+          tfds.core.Version('1.0.0', 'version of march 2019')
+        ],
         base_data='cityscapes',
       )]
 
@@ -86,7 +87,8 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
     # TODO add the cityscapes overlays
     dl_paths = dl_manager.download({
         'lostandfound_mask': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fishyscapes_lostandfound.zip',
-        'cityscapes_overlays': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v1.zip',
+        'cityscapes_overlays_v1': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v1.zip',
+        'cityscapes_overlays_v2': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v2.zip',
     })
     dl_paths = dl_manager.extract(dl_paths)
 
@@ -106,7 +108,10 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
       base_dl_manager = dl_manager
     elif self.builder_config.base_data == 'cityscapes':
       base_builder = Cityscapes(config='semantic_segmentation')
-      downloaded_data = dl_paths['cityscapes_overlays']
+      if self.builder_config.version == '1.0.0':
+        downloaded_data = dl_paths['cityscapes_overlays_v1']
+      elif self.builder_config.version == '2.0.0':
+        downloaded_data = dl_paths['cityscapes_overlays_v2']
       base_dl_manager = tfds.download.DownloadManager(
         download_dir=download_dir,
         manual_dir=path.join(download_dir, 'manual/cityscapes'))

@@ -52,19 +52,28 @@ class FishyscapesValidation(Benchmark):
             Fishyscapes(config=config).download_and_prepare()
 
     @classmethod
-    def load(cls, config):
-        """Returns the FS Lost & Found Validation Set."""
-        if config == 'Static':
+    def load(cls, config_str):
+        """
+        Returns the specified dataset.
+
+        Args:
+            config_str: config string as defined by tensorflow datasets, without the
+                dataset name , e.g. Static:1.0.0 for dataset Fishyscapes/Static:1.0.0
+        """
+        _, builder_args = tfds.core.registered._dataset_name_and_kwargs_from_name_str(
+            'fishyscapes/{}'.format(config_str))
+
+        if builder_args['config'] == 'Static':
             # Make sure that the cityscapes dataset is ready.
             Cityscapes(config='semantic_segmentation').download_and_prepare()
-        ds = Fishyscapes(config=config)
+        ds = Fishyscapes(**builder_args)
         # Fishyscapes has no trainset, and we need to wait for the PR on tfds to return
         # the cityscapes dataset as training set.
         return DataSplits(None, ds.as_dataset(split='validation'), None)
 
     @classmethod
-    def get_dataset(cls, config):
-        return cls.load(config)[1]
+    def get_dataset(cls, config_str):
+        return cls.load(config_str)[1]
 
     @property
     def info(self):
