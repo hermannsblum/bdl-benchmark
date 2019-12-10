@@ -20,6 +20,7 @@ from __future__ import print_function
 
 import numpy as np
 from tqdm import tqdm
+import tensorflow_datasets as tfds
 
 from ..core.levels import Level
 from ..core.constants import DATA_DIR
@@ -27,6 +28,7 @@ from ..core.benchmark import Benchmark, DataSplits
 from ..core.benchmark import BenchmarkInfo
 from ..core import transforms
 from .fishyscapes_tfds import _CITATION, _DESCRIPTION, Fishyscapes
+from .cityscapes import Cityscapes
 
 
 class FishyscapesValidation(Benchmark):
@@ -37,24 +39,32 @@ class FishyscapesValidation(Benchmark):
         if not level == 'realworld':
             raise UserWarning("Fishyscapes only provides data on realworld level.")
         if download_and_prepare:
-            self.download_and_prepare()
+            for config in ['Lost and Found', 'Static']:
+                self.download_and_prepare(config)
 
     @classmethod
-    def download_and_prepare(cls):
+    def download_and_prepare(cls, config, register_checksums=False):
         """Downloads and prepares necessary datasets for benchmark."""
-        Fishyscapes().download_and_prepare()
+        if register_checksums:
+            dl_config = tfds.download.DownloadConfig(register_checksums=True)
+            Fishyscapes(config=config).download_and_prepare(download_config=dl_config)
+        else:
+            Fishyscapes(config=config).download_and_prepare()
 
     @classmethod
-    def load(cls):
+    def load(cls, config):
         """Returns the FS Lost & Found Validation Set."""
-        ds = Fishyscapes()
+        if config == 'Static':
+            # Make sure that the cityscapes dataset is ready.
+            Cityscapes(config='semantic_segmentation').download_and_prepare()
+        ds = Fishyscapes(config=config)
         # Fishyscapes has no trainset, and we need to wait for the PR on tfds to return
         # the cityscapes dataset as training set.
         return DataSplits(None, ds.as_dataset(split='validation'), None)
 
     @classmethod
-    def get_dataset(cls):
-        return cls.load()[1]
+    def get_dataset(cls, config):
+        return cls.load(config)[1]
 
     @property
     def info(self):

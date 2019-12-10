@@ -1,1 +1,2 @@
 http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fishyscapes_lostandfound.zip 729335 f0078e89f0a147060a0864feb90e8b523313a2723b1b764bce638dc425473094
+http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v1.zip 4417983 47060202a0eb0af1273046a679956661dc47ff1479253bfc0bcbb7a980831211

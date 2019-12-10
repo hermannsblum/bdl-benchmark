@@ -8,10 +8,12 @@ import tensorflow as tf
 from itertools import chain
 from os import path
 import re
+import numpy as np
 
 import tensorflow_datasets as tfds
 from tensorflow_datasets.core import api_utils
 from .lost_and_found import LostAndFound, LostAndFoundConfig
+from .cityscapes import Cityscapes, CityscapesConfig
 
 _CITATION = """
 @article{blum2019fishyscapes,
@@ -34,8 +36,7 @@ class FishyscapesConfig(tfds.core.BuilderConfig):
   @api_utils.disallow_positional_args
   def __init__(self, base_data='lost_and_found', **kwargs):
     super().__init__(**kwargs)
-
-    assert base_data in ['lost_and_found']
+    assert base_data in ['lost_and_found', 'cityscapes']
     self.base_data = base_data
 
 
@@ -49,10 +50,16 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
         name='Lost and Found',
         description='Validation set based on LostAndFound images.',
         version=VERSION,
+        base_data='lost_and_found',
+      ),
+      FishyscapesConfig(
+        name='Static',
+        description='Validation set based on Cityscapes and Pascal VOC images.',
+        version=VERSION,
+        base_data='cityscapes',
       )]
 
   def _info(self):
-    # TODO(fishyscapes): Specifies the tfds.core.DatasetInfo object
     return tfds.core.DatasetInfo(
         builder=self,
         # This is the description that will appear on the datasets page.
@@ -76,11 +83,15 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
   def _split_generators(self, dl_manager):
     """Returns SplitGenerators."""
     # download the data
+    # TODO add the cityscapes overlays
     dl_paths = dl_manager.download({
-        'mask': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fishyscapes_lostandfound.zip',
+        'lostandfound_mask': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fishyscapes_lostandfound.zip',
+        'cityscapes_overlays': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v1.zip',
     })
     dl_paths = dl_manager.extract(dl_paths)
 
+    # only way to get the tfds downlaod path
+    download_dir = path.join(self._data_dir_root, 'downloads')
     if self.builder_config.base_data == 'lost_and_found':
       base_builder = LostAndFound(config=LostAndFoundConfig(
           name='fishyscapes',
@@ -91,19 +102,27 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
           instance_ids=False,
           disparity_maps=False,
           use_16bit=False))
-
-    # manually force a downlaod and split generation for the base dataset
+      downloaded_data = dl_paths['lostandfound_mask']
+      base_dl_manager = dl_manager
+    elif self.builder_config.base_data == 'cityscapes':
+      base_builder = Cityscapes(config='semantic_segmentation')
+      downloaded_data = dl_paths['cityscapes_overlays']
+      base_dl_manager = tfds.download.DownloadManager(
+        download_dir=download_dir,
+        manual_dir=path.join(download_dir, 'manual/cityscapes'))
+    else:
+      raise UserWarning('config contains unsupported base_data')
+    # manually force a download and split generation for the base dataset
     # There is no tfds-API that allows for getting images by id, so this is the only
     # option.
-    splits = base_builder._split_generators(dl_manager)
+    splits = base_builder._split_generators(base_dl_manager)
     generators = [base_builder._generate_examples(**split.gen_kwargs)
                   for split in splits]
-
     return [
         tfds.core.SplitGenerator(
             name=tfds.Split.VALIDATION,
             # These kwargs will be passed to _generate_examples
-            gen_kwargs={'fishyscapes_path': dl_paths['mask'],
+            gen_kwargs={'fishyscapes_path': downloaded_data,
                         'base_images': {key: features for key, features in chain(*generators)}},
         ),
     ]
@@ -111,14 +130,25 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
   def _generate_examples(self, fishyscapes_path, base_images):
     """Yields examples."""
     for filename in tf.io.gfile.listdir(fishyscapes_path):
-      fs_id, cityscapes_id = _get_ids_from_labels_file(filename)
-      features = {
-        'image_id': fs_id,
-        'basedata_id': cityscapes_id,
-        'mask': path.join(fishyscapes_path, filename),
-        'image_left': base_images[cityscapes_id]['image_left'],
-      }
-      yield fs_id, features
+      if filename.endswith('_labels.png'):
+        fs_id, cityscapes_id = _get_ids_from_labels_file(filename)
+        features = {
+          'image_id': fs_id,
+          'basedata_id': cityscapes_id,
+          'mask': path.join(fishyscapes_path, filename),
+        }
+        if self.builder_config.base_data == 'lost_and_found':
+          features['image_left'] = base_images[cityscapes_id]['image_left']
+        elif self.builder_config.base_data == 'cityscapes':
+          overlay_image = next(f for f in tf.io.gfile.listdir(fishyscapes_path)
+                               if f.startswith(fs_id) and f.endswith('rgb.npz'))
+          overlay_image = np.load(
+            path.join(fishyscapes_path, overlay_image))['rgb'].astype(int)
+          base_image = base_images[cityscapes_id]['image_left']
+          base_image = tf.image.decode_jpeg(tf.io.read_file(base_image), channels=3)
+          base_image = np.array(base_image).astype(int)
+          features['image_left'] = np.clip(base_image + overlay_image, 0, 255).astype('uint8')
+        yield fs_id, features
 
 # Helper functions
 
