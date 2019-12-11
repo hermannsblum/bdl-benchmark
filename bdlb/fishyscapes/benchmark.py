@@ -39,7 +39,7 @@ class FishyscapesValidation(Benchmark):
         if not level == 'realworld':
             raise UserWarning("Fishyscapes only provides data on realworld level.")
         if download_and_prepare:
-            for config in ['Lost and Found', 'Static']:
+            for config in ['LostAndFound', 'Static']:
                 self.download_and_prepare(config)
 
     @classmethod
