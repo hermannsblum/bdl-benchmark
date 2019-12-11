@@ -45,7 +45,7 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
 
   BUILDER_CONFIGS = [
       FishyscapesConfig(
-        name='Lost and Found',
+        name='LostAndFound',
         description='Validation set based on LostAndFound images.',
         version=tfds.core.Version('1.0.0'),
         base_data='lost_and_found',
