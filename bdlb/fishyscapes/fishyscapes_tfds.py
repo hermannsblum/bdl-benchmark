@@ -12,8 +12,8 @@ import numpy as np
 
 import tensorflow_datasets as tfds
 from tensorflow_datasets.core import api_utils
-from .lost_and_found import LostAndFound, LostAndFoundConfig
-from .cityscapes import Cityscapes, CityscapesConfig
+from tensorflow_datasets.image.lost_and_found import LostAndFound, LostAndFoundConfig
+from tensorflow_datasets.image.cityscapes import Cityscapes, CityscapesConfig
 
 _CITATION = """
 @article{blum2019fishyscapes,
