@@ -28,7 +28,7 @@ from ..core.benchmark import Benchmark, DataSplits
 from ..core.benchmark import BenchmarkInfo
 from ..core import transforms
 from .fishyscapes_tfds import _CITATION, _DESCRIPTION, Fishyscapes
-from .cityscapes import Cityscapes
+from tensorflow_datasets.image.cityscapes import Cityscapes
 
 
 class FishyscapesValidation(Benchmark):
