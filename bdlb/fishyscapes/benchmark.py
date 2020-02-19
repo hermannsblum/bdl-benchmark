@@ -116,11 +116,12 @@ class FishyscapesValidation(Benchmark):
         labels = []
         uncertainties = []
         for batch in tqdm(dataset):
-            labels.append(batch['mask'].numpy()[..., 0])
+            labels.append(batch['mask'].numpy())
             uncertainties.append(estimator(batch['image_left']).numpy())
 
         # concatenate lists for labels and uncertainties together
-        if np.ndim(labels[0]) > 2:
+        if (labels[0].shape[-1] > 1 and np.ndim(labels[0]) > 2) or \
+                (labels[0].shape[-1] == 1 and np.ndim(labels[0]) > 3):
             # data is already in batches
             labels = np.concatenate(labels)
             uncertainties = np.concatenate(uncertainties)
