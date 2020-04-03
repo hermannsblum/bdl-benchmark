@@ -53,9 +53,10 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
       FishyscapesConfig(
         name='Static',
         description='Validation set based on Cityscapes and Pascal VOC images.',
-        version=tfds.core.Version('2.0.0', 'improved blending since june 2019'),
+        version=tfds.core.Version('3.0.0', 'january 2020: added cityscapes objects as negative test'),
         supported_versions=[
-          tfds.core.Version('1.0.0', 'version of march 2019')
+          tfds.core.Version('2.0.0', 'june 2019: improved blending'),
+          tfds.core.Version('1.0.0', 'march 2019: first version'),
         ],
         base_data='cityscapes',
       )]
@@ -89,6 +90,7 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
         'lostandfound_mask': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fishyscapes_lostandfound.zip',
         'cityscapes_overlays_v1': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v1.zip',
         'cityscapes_overlays_v2': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v2.zip',
+        'cityscapes_overlays_v3': 'http://robotics.ethz.ch/~asl-datasets/Fishyscapes/fs_val_v3.zip',
     })
     dl_paths = dl_manager.extract(dl_paths)
 
@@ -112,6 +114,8 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
         downloaded_data = dl_paths['cityscapes_overlays_v1']
       elif self.builder_config.version == '2.0.0':
         downloaded_data = dl_paths['cityscapes_overlays_v2']
+      elif self.builder_config.version == '3.0.0':
+        downloaded_data = dl_paths['cityscapes_overlays_v3']
       base_dl_manager = tfds.download.DownloadManager(
         download_dir=download_dir,
         manual_dir=path.join(download_dir, 'manual/cityscapes'))
