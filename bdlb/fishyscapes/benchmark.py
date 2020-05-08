@@ -128,6 +128,8 @@ class FishyscapesValidation(Benchmark):
         else:
             labels = np.stack(labels)
             uncertainties = np.stack(uncertainties)
+        labels = labels.squeeze()
+        uncertainties = uncertainties.squeeze()
 
         # NOW CALCULATE METRICS
         pos = labels == 1
