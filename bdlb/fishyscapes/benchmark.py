@@ -133,7 +133,7 @@ class FishyscapesValidation(Benchmark):
 
         # NOW CALCULATE METRICS
         pos = labels == 1
-        valid = labels <= 1  # filter out void
+        valid = np.logical_or(labels == 1, labels == 0)  # filter out void
         gt = pos[valid]
         del pos
         uncertainty = uncertainties[valid].reshape(-1).astype(np.float32, copy=False)
