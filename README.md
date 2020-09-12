@@ -38,7 +38,7 @@ In this repo we strive to provide such well-needed benchmarks for the BDL commun
 *BDL Benchmarks* is shipped as a PyPI package (Python3 compatible) installable as:
 
 ```
-pip3 install git+https://github.com/hermannsblum/bdl-benchmarks.git
+pip3 install git+https://github.com/hermannsblum/bdl-benchmark.git
 ```
 
 The data downloading and preparation is done automatically for most of the benchmarks.
