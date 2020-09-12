@@ -78,7 +78,7 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
         }),
         supervised_keys=('image_left', 'mask'),
         # Homepage of the dataset for documentation
-        urls=[],
+        homepage='https://fishyscapes.com/',
         citation=_CITATION,
     )
 
