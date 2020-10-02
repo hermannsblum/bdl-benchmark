@@ -98,7 +98,7 @@ class DiabeticRetinopathyDiagnosis(tfds.image.DiabeticRetinopathyDetection):
             "label":
             tfds.features.ClassLabel(num_classes=2),
         }),
-        urls=["https://www.kaggle.com/c/diabetic-retinopathy-detection/data"],
+        homepage="https://www.kaggle.com/c/diabetic-retinopathy-detection/data",
         citation=tfds.image.diabetic_retinopathy_detection._CITATION,
     )
 
