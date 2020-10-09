@@ -62,7 +62,5 @@ class BenchmarkNotFoundError(ValueError):
 
   def __init__(self, name):
     all_denchmarks_str = "\n\t- ".join([""] + list(_BENCHMARK_REGISTRY.keys()))
-    error_str = (
-        "Benchmark {name} not found. Available denchmarks: {benchmarks}\n",
-        format(name=name, benchmarks=all_denchmarks_str))
+    error_str = f"Benchmark {name} not found. Available denchmarks: {all_denchmarks_str}\n"
     super(BenchmarkNotFoundError, self).__init__(error_str)
