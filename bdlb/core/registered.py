@@ -16,11 +16,13 @@
 
 from ..diabetic_retinopathy_diagnosis.benchmark import DiabeticRetinopathyDiagnosisBecnhmark
 from ..fishyscapes.benchmark import FishyscapesValidation
+from ..fishyscapes.benchmark_road import FishyscapesLafOnRoad
 
 # Internal registry containing <str registered_name, Benchmark subclass>
 _BENCHMARK_REGISTRY = {
     "diabetic_retinopathy_diagnosis": DiabeticRetinopathyDiagnosisBecnhmark,
     "fishyscapes": FishyscapesValidation,
+    "fishyscapes-road": FishyscapesLafOnRoad,
 }
 
 
