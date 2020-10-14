@@ -63,6 +63,8 @@ class BenchmarkNotFoundError(ValueError):
   """The requested `bdlb.Benchmark` was not found."""
 
   def __init__(self, name):
-    all_denchmarks_str = "\n\t- ".join([""] + list(_BENCHMARK_REGISTRY.keys()))
-    error_str = f"Benchmark {name} not found. Available denchmarks: {all_denchmarks_str}\n"
+    error_str = "Benchmark {name} not found. Available denchmarks: {all_denchmarks_str}\n".format(
+      name = name,
+      all_denchmarks_str = "\n\t- ".join([""] + list(_BENCHMARK_REGISTRY.keys())),
+    )
     super(BenchmarkNotFoundError, self).__init__(error_str)

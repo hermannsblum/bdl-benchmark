@@ -130,7 +130,10 @@ class FishyLAF_OrigLafLabels_Dataset:
         fid_extracted = str(frame['image_id'], 'utf8')
         frame['image_id'] = fid_extracted
         if fid_extracted != fid:
-            raise AssertionError(f'LostAndFound-{laf_split}[{laf_idx}] is {fid_extracted} but we wanted {fid}')
+            msg = 'LostAndFound-{laf_split}[{laf_idx}] is {fid_extracted} but we wanted {fid}'.format(
+                laf_split=laf_split, laf_idx=laf_idx, fid_extracted=fid_extracted, fid=fid,
+            )
+            raise AssertionError(msg)
         
         frame['mask'] = self.convert_labels_LAF_to_Fishy(frame['segmentation_label'])
         
