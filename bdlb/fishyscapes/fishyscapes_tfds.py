@@ -32,10 +32,11 @@ class FishyscapesConfig(tfds.core.BuilderConfig):
 
     Args:
   '''
-  def __init__(self, base_data='lost_and_found', **kwargs):
+  def __init__(self, base_data='lost_and_found', original_mask=False, **kwargs):
     super().__init__(**kwargs)
     assert base_data in ['lost_and_found', 'cityscapes']
     self.base_data = base_data
+    self.original_mask = original_mask
 
 
 class Fishyscapes(tfds.core.GeneratorBasedBuilder):
@@ -47,6 +48,14 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
         description='Validation set based on LostAndFound images.',
         version=tfds.core.Version('1.0.0'),
         base_data='lost_and_found',
+        original_mask=False,
+      ),
+      FishyscapesConfig(
+        name='OriginalLostAndFound',
+        description='Validation set based on LostAndFound images.',
+        version=tfds.core.Version('1.0.0'),
+        base_data='lost_and_found',
+        original_mask=True,
       ),
       FishyscapesConfig(
         name='Static',
@@ -98,9 +107,9 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
       base_builder = LostAndFound(config=LostAndFoundConfig(
           name='fishyscapes',
           description='Config to generate images for the Fishyscapes dataset.',
-          version='1.0.0',
+          version='1.1.0',
           right_images=False,
-          segmentation_labels=False,
+          segmentation_labels=True,
           instance_ids=False,
           disparity_maps=False,
           use_16bit=False))
@@ -146,6 +155,8 @@ class Fishyscapes(tfds.core.GeneratorBasedBuilder):
         }
         if self.builder_config.base_data == 'lost_and_found':
           features['image_left'] = base_images[cityscapes_id]['image_left']
+          if self.builder_config.original_mask:
+            features['mask'] = base_images[cityscapes_id]['segmentation_label']
         elif self.builder_config.base_data == 'cityscapes':
           overlay_image = next(f for f in tf.io.gfile.listdir(fishyscapes_path)
                                if f.startswith(fs_id) and f.endswith('rgb.npz'))
