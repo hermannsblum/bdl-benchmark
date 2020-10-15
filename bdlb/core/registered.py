@@ -16,11 +16,13 @@
 
 from ..diabetic_retinopathy_diagnosis.benchmark import DiabeticRetinopathyDiagnosisBecnhmark
 from ..fishyscapes.benchmark import FishyscapesValidation
+from ..fishyscapes.benchmark_road import FishyscapesLafOnRoad
 
 # Internal registry containing <str registered_name, Benchmark subclass>
 _BENCHMARK_REGISTRY = {
     "diabetic_retinopathy_diagnosis": DiabeticRetinopathyDiagnosisBecnhmark,
     "fishyscapes": FishyscapesValidation,
+    "fishyscapes-road": FishyscapesLafOnRoad,
 }
 
 
@@ -61,8 +63,8 @@ class BenchmarkNotFoundError(ValueError):
   """The requested `bdlb.Benchmark` was not found."""
 
   def __init__(self, name):
-    all_denchmarks_str = "\n\t- ".join([""] + list(_BENCHMARK_REGISTRY.keys()))
-    error_str = (
-        "Benchmark {name} not found. Available denchmarks: {benchmarks}\n",
-        format(name=name, benchmarks=all_denchmarks_str))
+    error_str = "Benchmark {name} not found. Available denchmarks: {all_denchmarks_str}\n".format(
+      name = name,
+      all_denchmarks_str = "\n\t- ".join([""] + list(_BENCHMARK_REGISTRY.keys())),
+    )
     super(BenchmarkNotFoundError, self).__init__(error_str)

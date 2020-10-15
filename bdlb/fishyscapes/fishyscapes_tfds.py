@@ -11,7 +11,6 @@ import re
 import numpy as np
 
 import tensorflow_datasets as tfds
-from tensorflow_datasets.core import api_utils
 from tensorflow_datasets.image.lost_and_found import LostAndFound, LostAndFoundConfig
 from tensorflow_datasets.image.cityscapes import Cityscapes, CityscapesConfig
 
@@ -33,7 +32,6 @@ class FishyscapesConfig(tfds.core.BuilderConfig):
 
     Args:
   '''
-  @api_utils.disallow_positional_args
   def __init__(self, base_data='lost_and_found', **kwargs):
     super().__init__(**kwargs)
     assert base_data in ['lost_and_found', 'cityscapes']

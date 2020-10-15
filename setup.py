@@ -44,7 +44,7 @@ setup(
         "tfp-nightly",
         "tensorflow-datasets",
     ],
-    package_data={'bdlb': ['core/url_checksums/*']},
+    package_data={'bdlb': ['core/url_checksums/*', 'fishyscapes/*_index.json']},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Researchers",
