@@ -12,14 +12,20 @@ from ..core.benchmark import Benchmark, DataSplits
 from ..core.levels import Level
 from .benchmark import calculate_metrics_perpixAP
 from .fishyscapes_tfds import Fishyscapes
+from .road_obstacles_tfds import RoadObstaclesTFDS
 
 
 class FishyscapesLafOnRoad(Benchmark):
     level = Level.REALWORLD
+    
+    IMAGE_KEY = 'image_left'
 
     def __init__(self, download_and_prepare=True, data_dir=None, **kwargs):
         if download_and_prepare:
-            Fishyscapes(config='OriginalLostAndFound').download_and_prepare()
+            self.download_and_prepare()
+
+    def download_and_prepare(self):
+        Fishyscapes(config='OriginalLostAndFound').download_and_prepare()
 
     @classmethod
     def load(cls):
@@ -52,17 +58,40 @@ class FishyscapesLafOnRoad(Benchmark):
         num_points: (optional) number of points to save for PR curves
         """
         if dataset is None:
-            dataset = cls.get_dataset()
+            dataset = self.get_dataset()
 
         # predict uncertainties over the dataset
         labels = []
         uncertainties = []
         for batch in tqdm(dataset):
             labels.append(batch['mask'].numpy())
-            uncertainties.append(estimator(batch['image_left']).numpy())
+        
+            uncertainties.append(estimator(batch[self.IMAGE_KEY]).numpy())
 
         return calculate_metrics_perpixAP(
             labels,
             uncertainties,
             num_points=num_points,
         )
+
+
+class FishyscapesOnRoad_RODataset(FishyscapesLafOnRoad):
+
+    info = 'Benchmark with RoadObstacle dataset.'
+
+    IMAGE_KEY = 'image'
+
+    def __init__(self, download_and_prepare=True, **_):
+        if download_and_prepare:
+            self.download_and_prepare()
+
+    def download_and_prepare(self):
+        self.get_dataset_spec().download_and_prepare()
+
+    @classmethod
+    def get_dataset_spec(cls):
+        return RoadObstaclesTFDS(config='RoadObstacles', version='0.0.2')
+
+    @classmethod
+    def get_dataset(cls):
+        return cls.get_dataset_spec().as_dataset(split='full')
