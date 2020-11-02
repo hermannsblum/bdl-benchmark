@@ -17,7 +17,7 @@ class RoadObstaclesTFDS(GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
         BuilderConfig(
             name = 'RoadObstacles', 
-            version = Version('0.0.2', 'sample batch 2'),
+            version = Version('0.0.3', 'sample batch 3'),
             description = """
                 Photos and annotations of obstacles placed on the road, 
                 featuring a variety of new objects and road surfaces.
@@ -90,7 +90,7 @@ class RoadObstaclesTFDS(GeneratorBasedBuilder):
         if download_server is None:
             raise RuntimeError('Please specify server URL as ROAD_OBSTACLE_URL env variable.')
 
-        download_url = download_server + "/dataset_RoadObstacle_0.0.2.zip"
+        download_url = download_server + "/dataset_RoadObstacle_0.0.3.zip"
         download_dir = dl_manager.download_and_extract(download_url)
 
         data_dir = Path(download_dir) / 'dataset_RoadObstacle'
