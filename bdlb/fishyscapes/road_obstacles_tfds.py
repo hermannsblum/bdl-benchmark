@@ -12,21 +12,37 @@ def imread(path):
     return np.asarray(Image.open(path))
 
 
+class BuilderConfigRO(BuilderConfig):
+    def __init__(self, dimension, **kw):
+        super().__init__(**kw)
+        self.dimension = dimension
+
 class RoadObstaclesTFDS(GeneratorBasedBuilder):
 
     BUILDER_CONFIGS = [
-        BuilderConfig(
+        BuilderConfigRO(
             name = 'RoadObstacles', 
             version = Version('0.0.3', 'sample batch 3'),
             description = """
                 Photos and annotations of obstacles placed on the road, 
                 featuring a variety of new objects and road surfaces.
-            """
-        )
+            """,
+            dimension = (2000, 1500),
+        ),
+        BuilderConfigRO(
+            name = 'RoadObstacles2048', 
+            version = Version('0.3.2048', 'sample batch 3, resized to 2048x1024'),
+            description = """
+                Photos and annotations of obstacles placed on the road, 
+                featuring a variety of new objects and road surfaces.
+                Cropped and resized to 2048x1024 to match Cityscapes and LAF.
+            """,
+            dimension = (2048, 1024),
+        ),
     ]
 
     def _info(self):
-        w, h = 2000, 1500
+        w, h = self.builder_config.dimension
         img_x3 = tfds.features.Image(shape=(h, w, 3))
         img_x1 = tfds.features.Image(shape=(h, w, 1))
 
@@ -90,7 +106,8 @@ class RoadObstaclesTFDS(GeneratorBasedBuilder):
         if download_server is None:
             raise RuntimeError('Please specify server URL as ROAD_OBSTACLE_URL env variable.')
 
-        download_url = download_server + "/dataset_RoadObstacle_0.0.3.zip"
+        v = self.builder_config.version
+        download_url = download_server + "/dataset_RoadObstacle_{v}.zip".format(v=v)
         download_dir = dl_manager.download_and_extract(download_url)
 
         data_dir = Path(download_dir) / 'dataset_RoadObstacle'
