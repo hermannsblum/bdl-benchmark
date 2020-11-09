@@ -90,7 +90,7 @@ class FishyscapesOnRoad_RODataset(FishyscapesLafOnRoad):
 
     @classmethod
     def get_dataset_spec(cls):
-        return RoadObstaclesTFDS(config='RoadObstacles', version='0.0.3')
+        return RoadObstaclesTFDS(config='RoadObstacles2048', version='0.3.2048')
 
     @classmethod
     def get_dataset(cls):
