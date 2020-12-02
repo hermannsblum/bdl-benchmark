@@ -61,8 +61,11 @@ class FishyscapesValidation(Benchmark):
             config_str: config string as defined by tensorflow datasets, without the
                 dataset name , e.g. Static:1.0.0 for dataset Fishyscapes/Static:1.0.0
         """
-        _, builder_args = tfds.core.registered._dataset_name_and_kwargs_from_name_str(
-            'fishyscapes/{}'.format(config_str))
+        if hasattr(tfds.core.registered, '_dataset_name_and_kwargs_from_name_str'):
+            name_kwargs_func = tfds.core.registered._dataset_name_and_kwargs_from_name_str
+        else:
+            name_kwargs_func = tfds.core.load._dataset_name_and_kwargs_from_name_str
+        _, builder_args = name_kwargs_func('fishyscapes/{}'.format(config_str))
 
         if builder_args['config'] == 'Static':
             # Make sure that the cityscapes dataset is ready.
