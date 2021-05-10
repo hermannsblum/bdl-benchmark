@@ -38,11 +38,8 @@ setup(
         "scipy",
         "pandas",
         "matplotlib",
-        "seaborn",
         "scikit-learn",
-        "kaggle",
-        "tfp-nightly",
-        "tensorflow-datasets",
+        "tensorflow-datasets==3.1.0",
     ],
     package_data={'bdlb': ['core/url_checksums/*', 'fishyscapes/*_index.json']},
     classifiers=[
