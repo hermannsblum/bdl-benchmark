@@ -1,3 +1,5 @@
+! requires the exact version `tensorflow-datasets==3.1.0` !
+
 # New: Fishyscapes added to BDLB!
 Check out the [**example notebook**](https://github.com/hermannsblum/bdl-benchmark/blob/master/notebooks/fishyscapes.ipynb) or [**run it in colab**](https://colab.research.google.com/github/hermannsblum/bdl-benchmark/blob/master/notebooks/fishyscapes.ipynb).
 
