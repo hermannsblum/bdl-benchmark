@@ -39,7 +39,7 @@ setup(
         "pandas",
         "matplotlib",
         "scikit-learn",
-        "tensorflow-datasets==3.1.0",
+        "tensorflow-datasets",
     ],
     package_data={'bdlb': ['core/url_checksums/*', 'fishyscapes/*_index.json']},
     classifiers=[
